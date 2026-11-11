@@ -105,7 +105,7 @@
         }
 
         /* =========================================================
-           CORTINA DE ATIVIDADES E CARDS DOS MÓDULOS
+           CORTINAS (AULAS E ATIVIDADES) E CARDS DOS MÓDULOS
            ========================================================= */
         .curtain-btn {
             width: 100%;
@@ -146,6 +146,12 @@
             font-weight: 800;
         }
 
+        .curtain-icon-lessons {
+            background: rgba(6, 182, 212, 0.18);
+            border: 1px solid rgba(6, 182, 212, 0.35);
+            color: #22d3ee;
+        }
+
         .curtain-title {
             font-size: 1.1rem;
             font-weight: 800;
@@ -166,6 +172,19 @@
 
         .curtain-arrow.open {
             transform: rotate(180deg);
+        }
+
+        .curtain-dev-box {
+            background-color: var(--bg-card);
+            border: 1px dashed #334155;
+            border-radius: 18px;
+            padding: 18px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            animation: popIn 0.2s ease-out;
         }
 
         .modules-grid {
@@ -796,7 +815,7 @@
 <body>
     <div class="app-container">
         <!-- =====================================================
-             TELA 1: MENU PRINCIPAL (COM CORTINA DE ATIVIDADES)
+             TELA 1: MENU PRINCIPAL (CORTINAS: AULAS E ATIVIDADES)
              ===================================================== -->
         <div id="menu-screen">
             <header class="main-header">
@@ -810,7 +829,23 @@
                 </div>
             </header>
 
-            <!-- Cortina: Atividades -->
+            <!-- Cortina 1: Aulas -->
+            <button class="curtain-btn" onclick="toggleLessonsCurtain()">
+                <div class="curtain-btn-left">
+                    <div class="curtain-icon curtain-icon-lessons">🎓</div>
+                    <div>
+                        <div class="curtain-title">Aulas</div>
+                        <div class="curtain-sub">Explicações e passo a passo</div>
+                    </div>
+                </div>
+                <span class="curtain-arrow" id="lessons-arrow">▼</span>
+            </button>
+
+            <div id="lessons-curtain" class="curtain-dev-box hidden">
+                🚧 Em desenvolvimento! Em breve você terá aulas e explicações passo a passo por aqui.
+            </div>
+
+            <!-- Cortina 2: Atividades (inicia fechada) -->
             <button class="curtain-btn" onclick="toggleActivitiesCurtain()">
                 <div class="curtain-btn-left">
                     <div class="curtain-icon">📚</div>
@@ -819,10 +854,10 @@
                         <div class="curtain-sub">Toque para abrir os 6 módulos de treino</div>
                     </div>
                 </div>
-                <span class="curtain-arrow open" id="curtain-arrow">▼</span>
+                <span class="curtain-arrow" id="curtain-arrow">▼</span>
             </button>
 
-            <main class="modules-grid" id="activities-curtain">
+            <main class="modules-grid hidden" id="activities-curtain">
                 <button class="module-card" onclick="startModule('numeros')">
                     <div class="module-icon icon-num">123</div>
                     <div class="module-info">
@@ -1070,8 +1105,15 @@
         }
 
         /* =========================================================
-           CORTINA DE ATIVIDADES NO MENU PRINCIPAL
+           CORTINAS NO MENU PRINCIPAL (AULAS E ATIVIDADES)
            ========================================================= */
+        function toggleLessonsCurtain() {
+            const curtain = document.getElementById('lessons-curtain');
+            const arrow = document.getElementById('lessons-arrow');
+            const isHidden = curtain.classList.toggle('hidden');
+            arrow.classList.toggle('open', !isHidden);
+        }
+
         function toggleActivitiesCurtain() {
             const curtain = document.getElementById('activities-curtain');
             const arrow = document.getElementById('curtain-arrow');
@@ -1143,7 +1185,6 @@
                     let exp = '';
 
                     if (lvl <= 2) {
-                        // Níveis 1-2: 1 passo simples (dobro, metade, soma ou subtração pequena)
                         const base = randInt(2, lvl === 1 ? 9 : 18);
                         const tipo = i % 4;
                         if (tipo === 0) {
@@ -1167,7 +1208,6 @@
                             texto = `${nome} comprou <span class="problem-highlight">${base} ${obj}</span>, mas perdeu <span class="problem-highlight">${menos}</span> no caminho. Quantas ${obj} restaram?`;
                         }
                     } else if (lvl <= 4) {
-                        // Níveis 3-4: triplo, multiplicação direta ou soma/subtração até 50
                         const base = randInt(6, lvl === 3 ? 20 : 40);
                         const tipo = i % 3;
                         if (tipo === 0) {
@@ -1186,7 +1226,6 @@
                             texto = `Em uma caixa havia <span class="problem-highlight">${base} ${obj}</span>. ${nome} retirou <span class="problem-highlight">${sub}</span>. Quantas sobraram?`;
                         }
                     } else if (lvl <= 6) {
-                        // Níveis 5-6: divisão exata contextualizada ou problemas de 2 passos (ganhou e perdeu)
                         const tipo = i % 2;
                         if (tipo === 0) {
                             const amigos = randInt(3, 9);
@@ -1204,7 +1243,6 @@
                             texto = `${nome} tinha <span class="problem-highlight">${ini} ${obj}</span>, ganhou <span class="problem-highlight">${ganhou}</span> de presente e depois deu <span class="problem-highlight">${perdeu}</span>. Com quantas ${obj} ficou?`;
                         }
                     } else if (lvl <= 8) {
-                        // Níveis 7-8: compras com troco ou dobro/triplo combinado
                         const tipo = i % 2;
                         if (tipo === 0) {
                             const qtd = randInt(3, 8);
@@ -1222,7 +1260,6 @@
                             texto = `${nome} tem <span class="problem-highlight">${base} ${obj}</span>. Seu primo tem o <span class="problem-highlight">dobro</span> dessa quantidade mais <span class="problem-highlight">${extra}</span>. Quantas ${obj} o primo tem?`;
                         }
                     } else {
-                        // Níveis 9-10: problemas de múltiplos passos combinando operações
                         const tipo = i % 2;
                         if (tipo === 0) {
                             const pacotes = randInt(4, 9);
@@ -1841,7 +1878,6 @@
             const acc = Math.round((hits / total) * 100);
             const avgTime = (session.kumonSeconds / total).toFixed(1);
 
-            // Problemas contextualizados têm tempo-alvo um pouco maior para leitura
             const baseSec = session.module === 'problemas' ? 14 : 8;
             const targetPerQ = baseSec + session.kumonLevel * 1.5;
             const maxAllowedTime = Math.round(total * targetPerQ);
